@@ -65,8 +65,9 @@ def process_payment(session_id):
                 raise ValueError("License not found")
 
             license.is_active = True
+            user = User.query.get(int(user_id))
+            user.subbed = True
             db.session.commit()
-
             return {
                 'status': 'success',
                 'user_id': user_id,

@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from flask_login import login_required  # Add this import
+from flask_login import login_required, current_user  # Add this import
 from controllers.license_controller import generate_license, validate_license, get_licenses
 
 license_bp = Blueprint('license_routes', __name__)
@@ -8,12 +8,21 @@ license_bp = Blueprint('license_routes', __name__)
 @license_bp.route('/generate-license/<int:user_id>', methods=['POST'])
 @login_required
 def generate_license_route(user_id):
+    """Generate three licenses for a user and send a confirmation email."""
     try:
-        license = generate_license(user_id)
+        if user_id != current_user.id:
+            return jsonify({'error': 'Unauthorized: Can only generate licenses for yourself'}), 403
+        
+        licenses = generate_license(user_id)
+        if not licenses:
+            raise ValueError("No licenses generated")
+        license = licenses[0]
+        
         return jsonify({'license_key': license.license_key}), 201
     except ValueError as e:
         return jsonify({'error': str(e)}), 400
     except Exception as e:
+        print(f"Error generating licenses: {str(e)}")  # Debug
         return jsonify({'error': 'An unexpected error occurred'}), 500
 
 # This function checks the validity of the license and takes the license key as the request data

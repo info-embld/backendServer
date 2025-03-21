@@ -10,7 +10,7 @@ def send_update_route():
         data = request.json
         subject = data.get('subject', 'Newsletter Update')
         message = data.get('message', 'No message provided.')
-        result = send_update_email(subject, message, current_app.mail)  # Pass mail instance
+        result = send_update_email(subject, message)  # Pass mail instance
         if result is None:
             return jsonify({'message': 'No subscribed users'}), 200
         return jsonify({'message': 'Emails sent to subscribed users'}), 200

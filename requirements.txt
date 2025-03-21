@@ -9,5 +9,5 @@ Flask-CORS==4.0.0
 pytest==7.4.0
 pytest-flask==1.2.0
 pytest-mock==3.11.1
-Flask-Mail==0.9.1
+Flask-MailMan==1.1.1
 bcrypt==4.1.2

@@ -1,6 +1,6 @@
 from flask import Flask
 from flask_login import LoginManager
-from flask_mail import Mail
+from flask_mailman import Mail
 from dotenv import load_dotenv
 from models.db_conf import db, init_db
 import os
@@ -21,7 +21,9 @@ app.config['MAIL_PASSWORD'] = os.getenv('MAIL_PASSWORD', '')
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'user_routes.login_route'  # Update if needed
-mail = Mail(app)  # Initialize Flask-Mail
+
+mail = Mail()
+mail.init_app(app)
 
 from models.users import User
 from models.licenses import License

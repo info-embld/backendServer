@@ -5,33 +5,37 @@ from models.db_conf import db  # Import db from main.py
 from controllers.email_controller import send_email_confirmation
 from datetime import datetime, timedelta
 import os
+import secrets
 
-def generate_license(id):
+def generate_license(user_id):
+    """Generate three licenses for a user and send a confirmation email."""
+    licenses = []
     for _ in range(3):
-        generating_license(user_id=id)
-    send_email_confirmation(id)
+        license = generating_license(user_id)
+        licenses.append(license)
+    send_email_confirmation(user_id)
+    return licenses
 
 def generating_license(user_id):
     """Generate a unique license key for a given user with 1-year expiration."""
     try:
-        # Check if user exists
         user = User.query.get(user_id)
         if not user:
             raise ValueError("User not found")
 
-        # Generate a JWT-based license key
         payload = {
             'user_id': user_id,
-            'iat': datetime.utcnow(),  # Issued at time
-            'exp': datetime.utcnow() + timedelta(days=365)  # Expires in 1 year
+            'iat': datetime.utcnow(),
+            'exp': datetime.utcnow() + timedelta(days=365)
         }
-        license_key = jwt.encode(payload, os.getenv('JWT_SECRET_KEY'), algorithm='HS256')
+        license_key = jwt.encode({'user_id': user_id, 'iat': datetime.utcnow(), 'exp': datetime.utcnow() + timedelta(days=365), 'nonce': secrets.token_hex(8)}, os.getenv('JWT_SECRET_KEY', 'test-jwt-secret-key'), algorithm='HS256')
 
-        # Create a new License entry
         new_license = License(
             license_key=license_key,
             user_id=user_id,
-            expires_at=payload['exp']
+            expires_at=payload['exp'],
+            created_at=datetime.utcnow(),
+            is_active=True
         )
 
         db.session.add(new_license)
