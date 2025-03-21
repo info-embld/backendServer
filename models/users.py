@@ -13,6 +13,7 @@ class User(UserMixin, db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     first_name = db.Column(db.String(50), nullable=False)
     last_name = db.Column(db.String(50), nullable=False)
+    subbed = db.Column(db.Boolean, default=False)
     is_active = db.Column(db.Boolean, default=True)
     newsletter_sub = db.Column(db.Boolean, default=False)
 

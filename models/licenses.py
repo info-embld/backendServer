@@ -11,6 +11,7 @@ class License(db.Model):  # Fixed: db.Model, not db.model
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     expires_at = db.Column(db.DateTime, nullable=True)  # Changed to nullable=True
     is_active = db.Column(db.Boolean, default=True)
+    paid = db.Column(db.Boolean, default=False)
 
     def __repr__(self):
         return f'<License {self.license_key}>'

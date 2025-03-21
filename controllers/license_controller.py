@@ -2,10 +2,16 @@ import jwt  # Correct import for PyJWT
 from models.licenses import License  # Import from models/licenses.py
 from models.users import User  # Import from models/users.py
 from models.db_conf import db  # Import db from main.py
+from controllers.email_controller import send_email_confirmation
 from datetime import datetime, timedelta
 import os
 
-def generate_license(user_id):
+def generate_license(id):
+    for _ in range(3):
+        generating_license(user_id=id)
+    send_email_confirmation(id)
+
+def generating_license(user_id):
     """Generate a unique license key for a given user with 1-year expiration."""
     try:
         # Check if user exists

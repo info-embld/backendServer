@@ -3,6 +3,7 @@ from controllers.email_controller import send_update_email
 
 email_bp = Blueprint('email_route', __name__)
 
+# this api endpoint takes 2 arguments subject (the title of the email) and message (the body of the email) 
 @email_bp.route('/send-update', methods=['POST'])
 def send_update_route():
     try:

@@ -7,9 +7,11 @@ from werkzeug.security import generate_password_hash
 from models.licenses import License
 from models.users import User
 from datetime import datetime, timedelta
+import stripe
+import os
 
 login_manager = LoginManager()
-
+mail = {}
 @pytest.fixture
 def app():
     test_app = Flask(__name__)
@@ -30,6 +32,7 @@ def app():
     login_manager.init_app(test_app)
     login_manager.login_view = 'user_routes.login_route'
     init_db(test_app)  
+    stripe.api_key = os.getenv('STRIPE_SECRET_KEY', 'sk_test_key')
     
     from routes.user_routes import user_bp
     from routes.payments_routes import payments_bp
@@ -83,6 +86,11 @@ def authenticated_client(client, init_test_db):
     with client:
         client.post('/login', json={'email': 'test@example.com', 'password': 'testpass'})
         yield client
+
+@pytest.fixture
+def mail(app):
+    """Provice the Flask-Mail instance for testing"""
+    return app.extensions['mail']
 
 @pytest.fixture
 def mock_smtp(mocker):

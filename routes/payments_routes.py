@@ -4,6 +4,7 @@ from controllers.payments_controller import create_payment_session, process_paym
 
 payments_bp = Blueprint('payments_routes', __name__)
 
+#Taking the id of user and license id and issues a payment using stripe platform to process payment
 @payments_bp.route('/payment/create/<int:user_id>/<int:license_id>', methods=['POST'])
 @login_required
 def create_payment(user_id, license_id):
@@ -19,6 +20,7 @@ def create_payment(user_id, license_id):
     except Exception as e:
         return jsonify({'error': 'An unexpected error occurred'}), 500
 
+#Fetch this function using the session id that is returned by the function above to verify if the payment is completed or not
 @payments_bp.route('/payment/success', methods=['GET'])
 @login_required
 def payment_success():
@@ -35,6 +37,8 @@ def payment_success():
     except Exception as e:
         return jsonify({'error': 'An unexpected error occurred'}), 500
 
+
+#Checks the payment is successful or not 
 @payments_bp.route('/payment/check/<session_id>', methods=['GET'])
 @login_required
 def check_payment(session_id):

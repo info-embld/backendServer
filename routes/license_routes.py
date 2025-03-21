@@ -4,6 +4,7 @@ from controllers.license_controller import generate_license, validate_license, g
 
 license_bp = Blueprint('license_routes', __name__)
 
+# This file only takes the user id in the link from the frontend and creates 3 licenses and send a confirmation email 
 @license_bp.route('/generate-license/<int:user_id>', methods=['POST'])
 @login_required
 def generate_license_route(user_id):
@@ -15,6 +16,7 @@ def generate_license_route(user_id):
     except Exception as e:
         return jsonify({'error': 'An unexpected error occurred'}), 500
 
+# This function checks the validity of the license and takes the license key as the request data
 @license_bp.route('/validate-license', methods=['POST'])
 @login_required
 def validate_license_route():
@@ -28,7 +30,8 @@ def validate_license_route():
         return jsonify({'error': str(e)}), 400
     except Exception as e:
         return jsonify({'error': 'An unexpected error occurred'}), 500
-    
+
+# Gets all the licenses and export them as a json data    
 @license_bp.route('/licenses', methods=['GET'])
 @login_required
 def get_licenses_route():
