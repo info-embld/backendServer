@@ -1,11 +1,14 @@
 import pytest
 from flask import Flask
 from flask_mail import Mail
+from flask_login import LoginManager
 from models.db_conf import db, init_db  
 from werkzeug.security import generate_password_hash
 from models.licenses import License
 from models.users import User
 from datetime import datetime, timedelta
+
+login_manager = LoginManager()
 
 @pytest.fixture
 def app():
@@ -24,6 +27,8 @@ def app():
         'MAIL_USE_TLS': True,
     })
     mail = Mail(test_app)
+    login_manager.init_app(test_app)
+    login_manager.login_view = 'user_routes.login_route'
     init_db(test_app)  
     
     from routes.user_routes import user_bp
@@ -38,6 +43,10 @@ def app():
     yield test_app
     with test_app.app_context():
         db.drop_all()
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
 
 @pytest.fixture
 def client(app):
@@ -60,6 +69,7 @@ def init_test_db(app):
         license = License(
             user_id=user.id,
             license_key="test-license-key",
+            created_at=datetime.utcnow(),
             expires_at=datetime.utcnow() + timedelta(days=365)
         )
         db.session.add(license)

@@ -78,3 +78,24 @@ def get_licenses():
         return all_licenses
     except Exception as e:
         raise ValueError(f"Failed to fetch licenses: {str(e)}")
+    
+def create_default_licenses(user_id):
+    try:
+        if user_id is None:
+            raise ValueError("User ID cannot be None for license generation")
+        expires_at = datetime.utcnow() + timedelta(days=14)  # Trial period
+        payload = {'user_id': user_id, 'exp': expires_at.timestamp()}
+        license_key = jwt.encode(payload, os.getenv('JWT_SECRET_KEY', 'default-jwt-secret-key'), algorithm='HS256')
+        license = License(
+            user_id=user_id,
+            license_key=license_key,  # No TRIAL- prefix unless desired
+            expires_at=expires_at,
+            created_at=datetime.utcnow(),
+            is_active=True
+        )
+        db.session.add(license)
+        db.session.commit()
+        return license
+    except Exception as e:
+        db.session.rollback()
+        raise ValueError(f"Failed to generate license: {str(e)}")

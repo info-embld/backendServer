@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
 from flask_login import login_required  # Add this import
-from controllers.license_controller import generate_license, validate_license
+from controllers.license_controller import generate_license, validate_license, get_licenses
 
 license_bp = Blueprint('license_routes', __name__)
 
@@ -28,3 +28,24 @@ def validate_license_route():
         return jsonify({'error': str(e)}), 400
     except Exception as e:
         return jsonify({'error': 'An unexpected error occurred'}), 500
+    
+@license_bp.route('/licenses', methods=['GET'])
+@login_required
+def get_licenses_route():
+    """Retrieve all licenses from the database."""
+    try:
+        licenses = get_licenses()
+        # Convert licenses to a JSON-serializable format
+        licenses_data = [{
+            'id': license.id,
+            'license_key': license.license_key,
+            'user_id': license.user_id,
+            'created_at': license.created_at.isoformat(),
+            'expires_at': license.expires_at.isoformat() if license.expires_at else None,
+            'is_active': license.is_active
+        } for license in licenses]
+        return jsonify({'licenses': licenses_data}), 200
+    except ValueError as e:
+        return jsonify({'error': str(e)}), 400
+    except Exception as e:
+        return jsonify({'error': f"An error occurred while fetching licenses: {str(e)}"}), 500

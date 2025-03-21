@@ -1,6 +1,8 @@
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user
 from models.users import User  # Import from models/users.py
+from models.licenses import License
+from datetime import datetime, timedelta
 from models.db_conf import db  # Import db from main.py
 
 # Signup function
@@ -14,9 +16,8 @@ def signup(user_data):
             raise ValueError("Email already registered")
 
         # Hash the password with Werkzeug
-        password_hash = generate_password_hash(password, method='sha256')
+        password_hash = generate_password_hash(password)
 
-        # Create new user instance (this triggers 3 trial licenses via User.__init__)
         new_user = User(
             first_name=first_name,
             last_name=last_name,
@@ -51,6 +52,19 @@ def get_user_by_id(user_id):
     """Retrieve a user by their ID."""
     try:
         user = User.query.get(int(user_id))  # Convert to int for safety
+        if not user:
+            raise ValueError("User not found")
+        return user
+    except ValueError as e:
+        raise e
+    except Exception as e:
+        raise ValueError(f"Failed to fetch user: {str(e)}")
+
+# Get user by email
+def get_user_by_email(email):
+    """Retrieve a user by their email"""
+    try:
+        user = User.query.getEmail(email=email).first()
         if not user:
             raise ValueError("User not found")
         return user
@@ -99,17 +113,25 @@ def edit_user(user_data):
 
 # Delete user
 def delete_user(user_id):
-    """Delete a user by their ID."""
+    """Delete a user by their ID along with their associated licenses."""
     try:
+        # Fetch the user
         user = User.query.get(int(user_id))
         if not user:
             raise ValueError("User not found")
-        
+
+        # Fetch and delete all licenses associated with the user
+        licenses = License.query.filter_by(user_id=int(user_id)).all()
+        for license in licenses:
+            db.session.delete(license)
+
+        # Delete the user
         db.session.delete(user)
         db.session.commit()
         return True
     except ValueError as e:
-        raise e
+        db.session.rollback()
+        raise ValueError(f"Delete failed: {str(e)}")
     except Exception as e:
         db.session.rollback()
         raise ValueError(f"Delete failed: {str(e)}")

@@ -1,9 +1,9 @@
 def test_signup(client, init_test_db):
     response = client.post('/signup', json={
-        'first_name': 'Jane',
-        'last_name': 'Doe',
-        'email': 'jane@example.com',
-        'password': 'pass123'
+        "first_name": "Jane",
+        "last_name": "Doe",
+        "email": "jane@example.com",
+        "password": "pass123"
     })
     assert response.status_code == 201
     assert response.json['message'] == 'User Jane Doe created'

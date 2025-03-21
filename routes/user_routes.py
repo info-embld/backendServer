@@ -1,7 +1,8 @@
 from flask import Blueprint, request, jsonify
 from flask_login import login_user, login_required
 from werkzeug.security import check_password_hash
-from controllers.user_controller import signup, edit_user, delete_user, get_user_by_id, get_users
+from controllers.user_controller import signup, edit_user, delete_user, get_user_by_id, get_users, get_user_by_email
+from controllers.license_controller import create_default_licenses
 from models.users import User
 
 user_bp = Blueprint('user_routes', __name__)
@@ -17,6 +18,8 @@ def signup_route():
             return jsonify({'error': 'Missing required fields'}), 400
         user_data = (data['first_name'], data['last_name'], data['email'], data['password'])
         user = signup(user_data)
+        committed_user = get_user_by_email(user.email)
+        create_default_licenses(committed_user.id)
         return jsonify({'message': f'User {user.first_name} {user.last_name} created'}), 201
     except ValueError as e:
         return jsonify({'error': str(e)}), 400
