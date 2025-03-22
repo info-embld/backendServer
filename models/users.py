@@ -15,7 +15,8 @@ class User(UserMixin, db.Model):
     last_name = db.Column(db.String(50), nullable=False)
     subbed = db.Column(db.Boolean, default=False)
     is_active = db.Column(db.Boolean, default=True)
-    newsletter_sub = db.Column(db.Boolean, default=False)
+    newsletter_sub = db.Column(db.Boolean, default=True)
+    address = db.Column(db.String(256), nullable=True)
 
     licenses = db.relationship('License', backref='user', lazy=True)
 

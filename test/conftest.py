@@ -1,6 +1,6 @@
 import pytest
 from flask import Flask
-from flask_mail import Mail
+from flask_mailman import Mail
 from flask_login import LoginManager
 from models.db_conf import db, init_db  
 from werkzeug.security import generate_password_hash
@@ -28,7 +28,8 @@ def app():
         'MAIL_PORT': 587,
         'MAIL_USE_TLS': True,
     })
-    mail = Mail(test_app)
+    mail = Mail()
+    mail.init_app(test_app)
     login_manager.init_app(test_app)
     login_manager.login_view = 'user_routes.login_route'
     init_db(test_app)  

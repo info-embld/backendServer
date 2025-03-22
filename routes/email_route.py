@@ -13,6 +13,6 @@ def send_update_route():
         result = send_update_email(subject, message)  # Pass mail instance
         if result is None:
             return jsonify({'message': 'No subscribed users'}), 200
-        return jsonify({'message': 'Emails sent to subscribed users'}), 200
+        return jsonify({'message': 'Email sent successfully'}), 200
     except ValueError as e:
         return jsonify({'error': str(e)}), 500
