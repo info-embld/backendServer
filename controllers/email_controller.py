@@ -34,7 +34,7 @@ def send_email_confirmation(user_id):
 
         msg = EmailMessage(
             subject="Thanks for subscribing to our Software",
-            body=f"Hello Mr/Mrs {user.first_name} {user.last_name}, Thanks for your purchase and We hope that you enjoy the subscription. This is an automatic email please don't reply to it",
+            body=f"Hello {user.first_name} {user.last_name}, Thanks for your purchase and We hope that you enjoy the subscription. This is an automatic email, please don't reply to it",
             from_email=current_app.config['MAIL_USERNAME'],
             to=[user.email]
         )
