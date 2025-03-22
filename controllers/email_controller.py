@@ -33,8 +33,8 @@ def send_email_confirmation(user_id):
             raise ValueError(f"User with id {user_id} not found")
 
         msg = EmailMessage(
-            subject="Thanks for subscribing to our Software",
-            body=f"Hello {user.first_name} {user.last_name}, Thanks for your purchase and We hope that you enjoy the subscription. This is an automatic email, please don't reply to it",
+            subject="We sincerely hope your Emboldened experience provides functional utility",
+            body=f"Hello {user.first_name} {user.last_name}, Thanks for your purchase and We hope that you enjoy your subscription. This is an automatic email, please don't reply to it",
             from_email=current_app.config['MAIL_USERNAME'],
             to=[user.email]
         )
