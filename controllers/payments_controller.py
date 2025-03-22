@@ -4,7 +4,7 @@ from models.users import User  # Import from models/users.py
 from models.db_conf import db  # Import db from main.py
 import os
 
-
+stripe.api_key = os.getenv('STRIPE_SECRET_KEY')
 
 def create_payment_session(user_id, license_id, amount):
     """Create a Stripe checkout session for purchasing a license."""

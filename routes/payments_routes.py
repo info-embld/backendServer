@@ -18,7 +18,7 @@ def create_payment(user_id, license_id):
     except ValueError as e:
         return jsonify({'error': str(e)}), 400
     except Exception as e:
-        return jsonify({'error': 'An unexpected error occurred'}), 500
+        return jsonify({'error': f'An unexpected error: {str(e)}'}), 500
 
 #Fetch this function using the session id that is returned by the function above to verify if the payment is completed or not
 @payments_bp.route('/payment/success', methods=['GET'])

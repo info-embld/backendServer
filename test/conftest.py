@@ -7,7 +7,6 @@ from werkzeug.security import generate_password_hash
 from models.licenses import License
 from models.users import User
 from datetime import datetime, timedelta
-import stripe
 import os
 
 login_manager = LoginManager()
@@ -33,7 +32,6 @@ def app():
     login_manager.init_app(test_app)
     login_manager.login_view = 'user_routes.login_route'
     init_db(test_app)  
-    stripe.api_key = os.getenv('STRIPE_SECRET_KEY', 'sk_test_key')
     
     from routes.user_routes import user_bp
     from routes.payments_routes import payments_bp
