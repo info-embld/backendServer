@@ -8,13 +8,13 @@ import os
 import secrets
 
 def generate_license(user_id):
-    """Generate three licenses for a user and send a confirmation email."""
-    licenses = []
-    for _ in range(3):
-        license = generating_license(user_id)
-        licenses.append(license)
-    send_email_confirmation(user_id)
-    return licenses
+    """Generate custom no. of licenses for a subscribed user and sends a confirmation email."""
+    licenses = [] #Licenses is a list array structure
+    for _ in range(3): #The list array has three index locations for licenses
+        license = generating_license(user_id) #Calls "generating license" to actually generate the license based on user ID
+        licenses.append(license) #Each new index (3 indexes) will have the generated license
+    send_email_confirmation(user_id) #Calls the "send_email_confirmation" function to send email to tha user
+    return licenses #Return the licenses list, to the "send_email_confirmation" function
 
 def generating_license(user_id):
     """Generate a unique license key for a given user with 1-year expiration."""
