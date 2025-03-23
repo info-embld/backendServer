@@ -93,12 +93,6 @@ def send_email_free_trial(user_id, licenses):
             print(error_msg)
             raise ValueError(error_msg)
         
-        # Convert single string to list for consistent handling
-        # if isinstance(licenses, str):
-        #     licenses = [licenses]
-        # elif not isinstance(licenses, (list, tuple)):
-        #     raise ValueError("Licenses must be a string or a list of strings")
-        
         body = (f"Hello Mr/Mrs {user.first_name} {user.last_name},\n\n"
                 f"This {licenses.license_key} is valid for 14 days from {licenses.created_at} to {licenses.expires_at} \n"
                 "We are excited for you and hope that your Emoldened experience provides measurable utility.\n Please do not reply to this email")
