@@ -2,7 +2,7 @@ import jwt  # Correct import for PyJWT
 from models.licenses import License  # Import from models/licenses.py
 from models.users import User  # Import from models/users.py
 from models.db_conf import db  # Import db from main.py
-from controllers.email_controller import send_email_confirmation, send_email_licenses
+from controllers.email_controller import send_email_confirmation, send_email_licenses, send_email_free_trial
 from datetime import datetime, timedelta
 import os
 import secrets
@@ -13,7 +13,6 @@ def generate_license(user_id):
     for _ in range(3):
         license = generating_license(user_id)
         licenses.append(license)
-    send_email_confirmation(user_id)
     send_email_licenses(user_id, licenses)
     return licenses
 
@@ -107,7 +106,7 @@ def create_default_licenses(user_id):
         db.session.add(license)
         db.session.commit()
         send_email_confirmation(user_id)
-        send_email_licenses(user_id, license.license_key)
+        send_email_free_trial(user_id, license)
         return license
     except Exception as e:
         db.session.rollback()
