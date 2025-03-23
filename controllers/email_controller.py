@@ -25,7 +25,7 @@ def send_update_email(subject, message):
         raise ValueError(f"Email sending failed: {str(e)}")
 
 def send_email_confirmation(user_id):
-    """Send a confirmation email to the user after paying the subscription."""
+    """Send a confirmation email to the user after paying for the subscription."""
     try:
         user = User.query.get(user_id)  # Fixed: Removed 'id = ' syntax error
         if not user:
