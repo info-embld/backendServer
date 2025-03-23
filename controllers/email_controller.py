@@ -43,3 +43,35 @@ def send_email_confirmation(user_id):
         return True
     except Exception as e:
         raise ValueError(f"Email sending failed: {str(e)}")
+    
+def send_email_licenses(user_id, licenses):
+    """Send an email with the licenses available to the user"""
+    try:
+        user = User.query.get(user_id)
+
+        if not user:
+            print(f"The user with id: {user_id} not found")
+            raise ValueError(f"The user with id: {user_id} not found")
+        
+        if isinstance(licenses, str):
+            licenses = [licenses]
+        elif not isinstance(licenses, (list, tuple)):
+            raise ValueError("Licenses must be a string or a list of strings")
+        
+        license_text = "\n".join([f"License Key {i+1}: {license}" 
+                                for i, license in enumerate(licenses)])
+        
+        body = (f"Hello Mr/Mrs {user.first_name} {user.last_name},\n\n"
+                f"Here are the licenses that you have now:\n{license_text}")
+
+        msg = EmailMessage(
+            subject="Licenses available right now",
+            body=body,
+            from_email=current_app.config['MAIL_USERNAME'],
+            to=[user.email]
+        )
+        msg.send()
+        print(f"Email sent to {user.email}")
+        return True
+    except Exception as e:
+        raise ValueError(f"Email sending Failed: {str(e)}")

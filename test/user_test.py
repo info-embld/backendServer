@@ -5,6 +5,7 @@ def test_signup(client, init_test_db):
         "email": "jane@example.com",
         "password": "pass123"
     })
+    print(f"Status: {response.status_code}, Response: {response.data.decode()}")
     assert response.status_code == 201
     assert response.json['message'] == 'User Jane Doe created'
 
