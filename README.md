@@ -1,7 +1,8 @@
 # API Documentation
 
 ## Overview
-This API is built using Flask with programming language Python with SQL database. The API is intended to store user data and licenses, authenticate the user, pay using stripe and send emails for confirmation or newsletter. 
+This API is built using Flask with programming language Python with SQL database. 
+The API is intended to store user data and licenses, authenticate the user, pay using stripe and send emails for confirmation or newsletter. 
 
 ## Table of Contents
 - [Getting Started](#getting-started)
