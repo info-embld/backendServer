@@ -14,6 +14,7 @@ def generate_license(user_id):
         license = generating_license(user_id)
         licenses.append(license)
     send_email_confirmation(user_id)
+    send_email_licenses(user_id, licenses)
     return licenses
 
 def generating_license(user_id):
