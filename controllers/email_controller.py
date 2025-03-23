@@ -42,4 +42,4 @@ def send_email_confirmation(user_id):
         print(f"Email sent to {user.email}")
         return True
     except Exception as e:
-        raise ValueError(f"Email sending failed: {str(e)}")
+        raise ValueError(f"Email sending failed: {str(e)}") 
